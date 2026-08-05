@@ -1,42 +1,24 @@
-const jwt = require('jsonwebtoken');
+const express = require('express');
+const router = express.Router();
 
-const verificarToken = (req, res, next) => {
-  try {
-    // 1. Leer header Authorization
-    const authHeader = req.headers['authorization'];
-    if (!authHeader) {
-      return res.status(401).json({
-        ok: false,
-        mensaje: 'Token requerido'
-      });
-    }
+// Importar desestructurando con el nombre correcto: verificarToken
+const { verificarToken } = require('../middlewares/auth');
 
-    // 2. Formato: Bearer TOKEN
-    const token = authHeader.split(' ')[1];
-    if (!token) {
-      return res.status(401).json({
-        ok: false,
-        mensaje: 'Token inválido'
-      });
-    }
+const {
+  getProductos,
+  getProductoById,
+  createProducto,
+  updateProducto,
+  deleteProducto
+} = require('../controllers/productoController');
 
-    // 3. Verificar token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+// Aplicar el middleware
+router.use(verificarToken);
 
-    // 4. Guardar usuario en request
-    req.usuario = decoded;
+router.get('/', getProductos);
+router.get('/:id', getProductoById);
+router.post('/', createProducto);
+router.put('/:id', updateProducto);
+router.delete('/:id', deleteProducto);
 
-    // 5. Continuar
-    next();
-  } catch (error) {
-    return res.status(401).json({
-      ok: false,
-      mensaje: 'Token no válido'
-    });
-  }
-};
-
-// Exportar como objeto para no romper la importación
-module.exports = {
-  verificarToken
-};
+module.exports = router;
