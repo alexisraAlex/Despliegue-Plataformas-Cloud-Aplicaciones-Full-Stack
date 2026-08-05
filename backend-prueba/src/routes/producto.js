@@ -1,7 +1,8 @@
-// routes/productRoutes.js (o producto.js)
 const express = require('express');
 const router = express.Router();
-const verifyToken = require('../middlewares/auth');
+
+const { verificarToken } = require('../middlewares/auth');
+
 const {
   getProductos,
   getProductoById,
@@ -10,8 +11,8 @@ const {
   deleteProducto
 } = require('../controllers/productoController');
 
-// Aplicar el middleware verifyToken a todas las rutas de productos
-router.use(verifyToken);
+// Middleware para proteger las rutas
+router.use(verificarToken);
 
 router.get('/', getProductos);
 router.get('/:id', getProductoById);
