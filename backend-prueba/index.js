@@ -33,7 +33,7 @@ mongoose.connect(MONGO_URI)
 // Rutas de la API
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/usuarios', require('./routes/usuarioRoutes'));
-app.use('/api/productos', require('./routes/productoRoutes'));
+app.use('/api/productos', require('./routes/producto'));
 
 // Ruta base de verificación
 app.get('/', (req, res) => {
