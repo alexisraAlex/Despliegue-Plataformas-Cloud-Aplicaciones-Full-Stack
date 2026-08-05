@@ -1,0 +1,22 @@
+<div class="auth-box">
+  <h2>Inscripción de Cuenta</h2>
+  <div *ngIf="errorMsg" class="error-panel">{{ errorMsg }}</div>
+  <div *ngIf="exitoMsg" class="success-panel">{{ exitoMsg }}</div>
+
+  <form (ngSubmit)="onRegister()">
+    <div class="input-cell">
+      <label>Nombre:</label>
+      <input type="text" name="name" [(ngModel)]="nuevoUsuario.name" required placeholder="Tu Nombre">
+    </div>
+    <div class="input-cell">
+      <label>Email:</label>
+      <input type="email" name="email" [(ngModel)]="nuevoUsuario.email" required placeholder="correo@ejemplo.com">
+    </div>
+    <div class="input-cell">
+      <label>Contraseña:</label>
+      <input type="password" name="password" [(ngModel)]="nuevoUsuario.password" required placeholder="******">
+    </div>
+    <button type="submit" class="btn-action">Registrar</button>
+  </form>
+  <p class="foot-switch">¿Ya eres usuario? <a routerLink="/login">Inicia sesión</a></p>
+</div>

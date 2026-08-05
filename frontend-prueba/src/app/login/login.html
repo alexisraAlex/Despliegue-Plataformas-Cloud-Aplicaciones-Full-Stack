@@ -1,0 +1,17 @@
+<div class="auth-box">
+  <h2>Control de Acceso</h2>
+  <div *ngIf="errorMsg" class="error-panel">{{ errorMsg }}</div>
+  
+  <form (ngSubmit)="onLogin()">
+    <div class="input-cell">
+      <label>Email:</label>
+      <input type="email" name="email" [(ngModel)]="credenciales.email" required placeholder="correo@ejemplo.com">
+    </div>
+    <div class="input-cell">
+      <label>Contraseña:</label>
+      <input type="password" name="password" [(ngModel)]="credenciales.password" required placeholder="******">
+    </div>
+    <button type="submit" class="btn-action">Ingresar</button>
+  </form>
+  <p class="foot-switch">¿No tienes cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+</div>
