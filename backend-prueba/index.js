@@ -31,9 +31,9 @@ mongoose.connect(MONGO_URI)
   .catch(err => console.error('Error al conectar MongoDB:', err));
 
 // Rutas de la API
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/usuarios', require('./routes/usuarioRoutes'));
-app.use('/api/productos', require('./routes/producto'));
+app.use('/api/auth', require('./src/routes/authRoutes'));
+app.use('/api/usuarios', require('./src/routes/usuarioRoutes'));
+app.use('/api/productos', require('./src/routes/producto'));
 
 // Ruta base de verificación
 app.get('/', (req, res) => {
