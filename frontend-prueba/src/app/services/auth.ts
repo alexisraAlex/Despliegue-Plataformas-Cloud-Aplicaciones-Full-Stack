@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // <- Importa HttpHeaders
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -11,7 +11,6 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   
-  // Se asegura de incluir /api/auth para coincidir con el backend de Express
   private apiUrl = `${environment.apiUrl}/api/auth`;
 
   login(credentials: { email: string; password: string }): Observable<any> {
@@ -30,6 +29,15 @@ export class AuthService {
 
   registrar(usuario: any): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/api/usuarios`, usuario);
+  }
+
+  // Método faltante para consultar la lista de usuarios con JWT
+  obtenerUsuarios(): Observable<any> {
+    const token = this.obtenerToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<any>(`${environment.apiUrl}/api/usuarios`, { headers });
   }
 
   guardarToken(token: string): void {
