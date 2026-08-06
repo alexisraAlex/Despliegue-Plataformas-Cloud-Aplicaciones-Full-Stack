@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
 
   usuarioToken: string | null = '';
   listaUsuarios: any[] = [];
+  cargando: boolean = true;
 
   ngOnInit(): void {
     this.usuarioToken = this.authService.obtenerToken();
@@ -27,11 +28,24 @@ export class DashboardComponent implements OnInit {
 
     this.authService.obtenerUsuarios().subscribe({
       next: (res: any) => {
-        // Guarda el array de usuarios que devuelve el backend
-        this.listaUsuarios = Array.isArray(res) ? res : (res.usuarios || res.data || []);
+        console.log('Respuesta del backend:', res);
+
+        // Detecta automáticamente si la respuesta es el array directo o viene dentro de una propiedad
+        if (Array.isArray(res)) {
+          this.listaUsuarios = res;
+        } else if (res && res.usuarios && Array.isArray(res.usuarios)) {
+          this.listaUsuarios = res.usuarios;
+        } else if (res && res.data && Array.isArray(res.data)) {
+          this.listaUsuarios = res.data;
+        } else {
+          this.listaUsuarios = [];
+        }
+
+        this.cargando = false;
       },
       error: (err) => {
         console.error('Error al obtener la lista de usuarios:', err);
+        this.cargando = false;
       }
     });
   }
