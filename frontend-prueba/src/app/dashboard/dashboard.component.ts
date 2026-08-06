@@ -25,10 +25,10 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    // Petición al backend para cargar la lista de usuarios
+    // Petición al backend para llenar la tabla
     this.authService.obtenerUsuarios().subscribe({
       next: (res: any) => {
-        // Asigna la respuesta (si el backend responde un array o un objeto { usuarios: [] })
+        // Maneja si el backend responde una lista directas o dentro de res.usuarios / res.data
         this.listaUsuarios = Array.isArray(res) ? res : (res.usuarios || res.data || []);
       },
       error: (err) => {
