@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth';
@@ -13,6 +13,7 @@ import { AuthService } from '../services/auth';
 export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef); // Inyección para forzar el refresco de vista
 
   usuarioToken: string | null = '';
   listaUsuarios: any[] = [];
@@ -30,7 +31,6 @@ export class DashboardComponent implements OnInit {
       next: (res: any) => {
         console.log('Respuesta del backend:', res);
 
-        // Detecta automáticamente si la respuesta es el array directo o viene dentro de una propiedad
         if (Array.isArray(res)) {
           this.listaUsuarios = res;
         } else if (res && res.usuarios && Array.isArray(res.usuarios)) {
@@ -42,10 +42,12 @@ export class DashboardComponent implements OnInit {
         }
 
         this.cargando = false;
+        this.cdr.detectChanges(); // Fuerza a Angular a pintar la tabla en pantalla inmediatamente
       },
       error: (err) => {
         console.error('Error al obtener la lista de usuarios:', err);
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }
