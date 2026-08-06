@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; // <- Importa HttpHeaders
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -11,9 +11,12 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   
-  private apiUrl = `${environment.apiUrl}/api/auth`;
+  // Base URL general de la API
+  private apiUrl = `${environment.apiUrl}/api`;
 
   login(credentials: { email: string; password: string }): Observable<any> {
+    // Si tu ruta en Express es /api/auth/login, mantén '/auth/login'.
+    // Si tu ruta es /api/login, cámbialo a `${this.apiUrl}/login`.
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
       tap(res => {
         const token = res.accessToken || res.token;
@@ -28,16 +31,15 @@ export class AuthService {
   }
 
   registrar(usuario: any): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/api/usuarios`, usuario);
+    return this.http.post<any>(`${this.apiUrl}/usuarios`, usuario);
   }
 
-  // Método faltante para consultar la lista de usuarios con JWT
   obtenerUsuarios(): Observable<any> {
     const token = this.obtenerToken();
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.get<any>(`${environment.apiUrl}/api/usuarios`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/usuarios`, { headers });
   }
 
   guardarToken(token: string): void {
