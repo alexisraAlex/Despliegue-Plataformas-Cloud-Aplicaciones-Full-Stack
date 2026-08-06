@@ -12,7 +12,7 @@ import { AuthService } from '../services/auth';
   styleUrls: ['./registro.css']
 })
 export class RegistroComponent {
-  nuevoUsuario = { name: '', email: '', password: '' };
+  nuevoUsuario = { nombre: '', email: '', password: '' };
   errorMsg: string = '';
   exitoMsg: string = '';
 
@@ -21,13 +21,11 @@ export class RegistroComponent {
   onRegister(): void {
     this.authService.registrar(this.nuevoUsuario).subscribe({
       next: (res) => {
-        if (res.ok) {
-          this.exitoMsg = '¡Registrado con éxito! Redirigiendo...';
-          setTimeout(() => this.router.navigate(['/login']), 2000);
-        }
+        this.exitoMsg = '¡Registrado con éxito! Redirigiendo...';
+        setTimeout(() => this.router.navigate(['/login']), 2000);
       },
       error: (err) => {
-        this.errorMsg = err.error?.msg || 'Error al procesar el registro.';
+        this.errorMsg = err.error?.msg || err.error?.mensaje || 'Error al procesar el registro.';
       }
     });
   }
