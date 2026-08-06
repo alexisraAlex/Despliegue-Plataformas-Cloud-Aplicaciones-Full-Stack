@@ -11,12 +11,10 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   
-  // Base URL general de la API
-  private apiUrl = `${environment.apiUrl}/api`;
+  // Usamos la URL tal como viene del environment (evita duplicar /api)
+  private apiUrl = environment.apiUrl; 
 
   login(credentials: { email: string; password: string }): Observable<any> {
-    // Si tu ruta en Express es /api/auth/login, mantén '/auth/login'.
-    // Si tu ruta es /api/login, cámbialo a `${this.apiUrl}/login`.
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
       tap(res => {
         const token = res.accessToken || res.token;
