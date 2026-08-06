@@ -27,6 +27,7 @@ export class DashboardComponent implements OnInit {
 
     this.authService.obtenerUsuarios().subscribe({
       next: (res: any) => {
+        // Guarda el array de usuarios que devuelve el backend
         this.listaUsuarios = Array.isArray(res) ? res : (res.usuarios || res.data || []);
       },
       error: (err) => {
