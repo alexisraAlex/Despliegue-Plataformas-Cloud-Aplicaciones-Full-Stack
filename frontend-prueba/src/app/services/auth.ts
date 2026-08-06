@@ -10,7 +10,9 @@ import { environment } from '../../environments/environment';
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private apiUrl = `${environment.apiUrl}/auth`;
+  
+  // Se asegura de incluir /api/auth para coincidir con el backend de Express
+  private apiUrl = `${environment.apiUrl}/api/auth`;
 
   login(credentials: { email: string; password: string }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
@@ -27,7 +29,7 @@ export class AuthService {
   }
 
   registrar(usuario: any): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/usuarios`, usuario);
+    return this.http.post<any>(`${environment.apiUrl}/api/usuarios`, usuario);
   }
 
   guardarToken(token: string): void {
