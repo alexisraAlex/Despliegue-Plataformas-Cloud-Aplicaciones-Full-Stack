@@ -28,15 +28,13 @@ export class AuthService {
   }
 
   registrar(usuario: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/usuarios`, usuario);
+    // Corregido: apunto a /auth/register de index.js
+    return this.http.post<any>(`${this.apiUrl}/auth/register`, usuario);
   }
 
   obtenerUsuarios(): Observable<any> {
-    const token = this.obtenerToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.get<any>(`${this.apiUrl}/usuarios`, { headers });
+    // Corregido: apunto a /users en lugar de /usuarios
+    return this.http.get<any>(`${this.apiUrl}/users`, { headers: this.obtenerHeaders() });
   }
 
   guardarToken(token: string): void {
@@ -55,5 +53,30 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.obtenerToken();
+  }
+
+  // ==================== MÉTODOS PARA EL RESTO DE COLECCIONES ====================
+
+  private obtenerHeaders(): HttpHeaders {
+    const token = this.obtenerToken();
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  obtenerColeccion(coleccion: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${coleccion}`, { headers: this.obtenerHeaders() });
+  }
+
+  crearRegistro(coleccion: string, data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${coleccion}`, data, { headers: this.obtenerHeaders() });
+  }
+
+  actualizarRegistro(coleccion: string, id: string, data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${coleccion}/${id}`, data, { headers: this.obtenerHeaders() });
+  }
+
+  eliminarRegistro(coleccion: string, id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${coleccion}/${id}`, { headers: this.obtenerHeaders() });
   }
 }

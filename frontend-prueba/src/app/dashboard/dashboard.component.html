@@ -1,36 +1,64 @@
-<div class="dashboard-wrapper">
-  <header style="display: flex; justify-content: space-between; padding: 20px; background: #222; color: #fff; align-items: center;">
-    <h1 style="margin: 0; font-size: 1.5rem;">Panel de Control</h1>
-    <button (click)="onLogout()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;">Cerrar Sesión</button>
-  </header>
+<div style="display: flex; min-height: 100vh; font-family: Arial, sans-serif;">
+  <!-- Sidebar con Módulos -->
+  <aside style="width: 240px; background: #1e293b; color: white; padding: 20px;">
+    <h2>CRM System</h2>
+    <hr style="border-color: #334155; margin-bottom: 20px;">
+    <nav style="display: flex; flex-direction: column; gap: 10px;">
+      <button (click)="cambiarModulo('clientes')" style="padding: 10px; text-align: left; background: #334155; color: white; border: none; border-radius: 4px; cursor: pointer;">👥 Clientes</button>
+      <button (click)="cambiarModulo('usuarios')" style="padding: 10px; text-align: left; background: #334155; color: white; border: none; border-radius: 4px; cursor: pointer;">👤 Usuarios</button>
+      <button (click)="cambiarModulo('productos')" style="padding: 10px; text-align: left; background: #334155; color: white; border: none; border-radius: 4px; cursor: pointer;">📦 Productos</button>
+      <button (click)="cambiarModulo('ventas')" style="padding: 10px; text-align: left; background: #334155; color: white; border: none; border-radius: 4px; cursor: pointer;">💰 Ventas</button>
+      <button (click)="cambiarModulo('actividades')" style="padding: 10px; text-align: left; background: #334155; color: white; border: none; border-radius: 4px; cursor: pointer;">📅 Actividades</button>
+      <button (click)="cambiarModulo('tickets')" style="padding: 10px; text-align: left; background: #334155; color: white; border: none; border-radius: 4px; cursor: pointer;">🎫 Tickets</button>
+      <button (click)="cambiarModulo('notificaciones')" style="padding: 10px; text-align: left; background: #334155; color: white; border: none; border-radius: 4px; cursor: pointer;">🔔 Notificaciones</button>
+    </nav>
+    <button (click)="onLogout()" style="margin-top: 40px; width: 100%; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">Cerrar Sesión</button>
+  </aside>
 
-  <main style="padding: 20px;">
-    <h2>Usuarios en la Base de Datos</h2>
+  <!-- Panel de Trabajo Central -->
+  <main style="flex: 1; padding: 30px; background: #f8fafc;">
+    <h1 style="text-transform: capitalize;">Módulo: {{ moduloActivo }}</h1>
 
-    <div *ngIf="cargando" style="margin: 20px 0; font-weight: bold;">
-      Cargando información...
+    <!-- Formulario Dinámico -->
+    <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <h3>Nuevo Registro en {{ moduloActivo }}</h3>
+      <form (submit)="crear()" style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <input *ngIf="moduloActivo === 'clientes' || moduloActivo === 'usuarios' || moduloActivo === 'productos'" type="text" [(ngModel)]="nuevoRegistro.nombre" name="nombre" placeholder="Nombre" required style="padding: 8px; flex: 1;">
+        <input *ngIf="moduloActivo === 'clientes' || moduloActivo === 'usuarios'" type="email" [(ngModel)]="nuevoRegistro.email" name="email" placeholder="Correo" style="padding: 8px; flex: 1;">
+        <input *ngIf="moduloActivo === 'usuarios'" type="password" [(ngModel)]="nuevoRegistro.password" name="password" placeholder="Contraseña" style="padding: 8px; flex: 1;">
+        <input *ngIf="moduloActivo === 'productos' || moduloActivo === 'ventas'" type="number" [(ngModel)]="nuevoRegistro.precio" name="precio" placeholder="Monto / Precio" style="padding: 8px; flex: 1;">
+        
+        <button type="submit" style="background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Guardar</button>
+      </form>
     </div>
 
-    <table *ngIf="!cargando" border="1" style="width: 100%; text-align: left; border-collapse: collapse; margin-top: 20px;">
-      <thead>
-        <tr style="background: #f4f4f4;">
-          <th style="padding: 12px;">ID</th>
-          <th style="padding: 12px;">Nombre</th>
-          <th style="padding: 12px;">Email</th>
-          <th style="padding: 12px;">Rol</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of listaUsuarios">
-          <td style="padding: 10px;">{{ item._id || item.id || 'N/A' }}</td>
-          <td style="padding: 10px;">{{ item.nombre || item.name || 'Sin nombre' }}</td>
-          <td style="padding: 10px;">{{ item.email || 'Sin email' }}</td>
-          <td style="padding: 10px;">{{ item.rol || item.role || 'user' }}</td>
-        </tr>
-        <tr *ngIf="listaUsuarios.length === 0">
-          <td colspan="4" style="padding: 15px; text-align: center;">No se encontraron usuarios registrados.</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Tabla de Datos -->
+    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <p *ngIf="cargando" style="padding: 20px;">Cargando datos...</p>
+      
+      <table *ngIf="!cargando" style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead style="background: #f1f5f9;">
+          <tr>
+            <th style="padding: 12px;">ID / Ref</th>
+            <th style="padding: 12px;">Detalle / Nombre</th>
+            <th style="padding: 12px;">Información Extra</th>
+            <th style="padding: 12px;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of listaDatos" style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 12px;">{{ item._id }}</td>
+            <td style="padding: 12px;">{{ item.nombre || item.mensaje || item.tipo || item.problema }}</td>
+            <td style="padding: 12px;">{{ item.email || item.precio || item.total || item.estado || 'N/A' }}</td>
+            <td style="padding: 12px;">
+              <button (click)="eliminar(item._id)" style="background: #dc2626; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">Eliminar</button>
+            </td>
+          </tr>
+          <tr *ngIf="listaDatos.length === 0 && !cargando">
+            <td colspan="4" style="padding: 20px; text-align: center; color: #64748b;">No hay registros disponibles en este módulo.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </main>
 </div>

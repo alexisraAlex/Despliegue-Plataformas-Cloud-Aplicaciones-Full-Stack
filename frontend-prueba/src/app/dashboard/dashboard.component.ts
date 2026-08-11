@@ -1,23 +1,30 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule, FormsModule, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef); // Inyección para forzar el refresco de vista
+  private cdr = inject(ChangeDetectorRef);
 
   usuarioToken: string | null = '';
-  listaUsuarios: any[] = [];
+  
+  // Estado para navegación de módulos
+  moduloActivo: string = 'usuarios'; 
+  listaDatos: any[] = [];
   cargando: boolean = true;
+
+  // Formulario para crear nuevos registros dinámicamente
+  nuevoRegistro: any = {};
 
   ngOnInit(): void {
     this.usuarioToken = this.authService.obtenerToken();
@@ -27,29 +34,70 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    this.authService.obtenerUsuarios().subscribe({
+    // Carga inicial por defecto
+    this.cambiarModulo('usuarios');
+  }
+
+  cambiarModulo(modulo: string): void {
+    this.moduloActivo = modulo;
+    this.cargando = true;
+    this.nuevoRegistro = {};
+
+    // Si es usuarios usamos tu método original, de lo contrario el genérico
+    const peticion = (modulo === 'usuarios') 
+      ? this.authService.obtenerUsuarios() 
+      : this.authService.obtenerColeccion(modulo);
+
+    peticion.subscribe({
       next: (res: any) => {
-        console.log('Respuesta del backend:', res);
+        console.log(`Respuesta del backend (${modulo}):`, res);
 
         if (Array.isArray(res)) {
-          this.listaUsuarios = res;
+          this.listaDatos = res;
         } else if (res && res.usuarios && Array.isArray(res.usuarios)) {
-          this.listaUsuarios = res.usuarios;
+          this.listaDatos = res.usuarios;
         } else if (res && res.data && Array.isArray(res.data)) {
-          this.listaUsuarios = res.data;
+          this.listaDatos = res.data;
         } else {
-          this.listaUsuarios = [];
+          this.listaDatos = [];
         }
 
         this.cargando = false;
-        this.cdr.detectChanges(); // Fuerza a Angular a pintar la tabla en pantalla inmediatamente
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error al obtener la lista de usuarios:', err);
+        console.error(`Error al obtener datos de ${modulo}:`, err);
+        this.listaDatos = [];
         this.cargando = false;
         this.cdr.detectChanges();
       }
     });
+  }
+
+  crear(): void {
+    this.authService.crearRegistro(this.moduloActivo, this.nuevoRegistro).subscribe({
+      next: () => {
+        this.cambiarModulo(this.moduloActivo);
+      },
+      error: (err) => {
+        console.error('Error al crear registro:', err);
+        alert(err.error?.mensaje || 'Error al guardar el registro');
+      }
+    });
+  }
+
+  eliminar(id: string): void {
+    if (confirm('¿Está seguro de eliminar este registro?')) {
+      this.authService.eliminarRegistro(this.moduloActivo, id).subscribe({
+        next: () => {
+          this.cambiarModulo(this.moduloActivo);
+        },
+        error: (err) => {
+          console.error('Error al eliminar registro:', err);
+          alert(err.error?.mensaje || 'No tienes permisos para eliminar este registro');
+        }
+      });
+    }
   }
 
   onLogout(): void {

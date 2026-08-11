@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+// TU FUNCIÓN ORIGINAL (Exactamente igual a como la tienes)
 const verificarToken = (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
@@ -29,6 +30,21 @@ const verificarToken = (req, res, next) => {
   }
 };
 
+// Funcion para controlar roles (admin, user, guest)
+const verificarRol = (rolesPermitidos = []) => {
+  return (req, res, next) => {
+    if (!req.usuario || !rolesPermitidos.includes(req.usuario.rol)) {
+      return res.status(403).json({
+        ok: false,
+        mensaje: 'Acceso denegado: no tienes permisos suficientes'
+      });
+    }
+    next();
+  };
+};
+
+
 module.exports = {
-  verificarToken
+  verificarToken,
+  verificarRol
 };

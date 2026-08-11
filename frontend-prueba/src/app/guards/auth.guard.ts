@@ -1,19 +1,13 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth';
+import { Router, CanActivateFn } from '@angular/router';
 
-export const authGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
+  const token = localStorage.getItem('token');
 
-  const token = authService.obtenerToken();
-
-  // Validar que el token exista y no sea una cadena literal de error/undefined
-  if (token && token !== 'undefined' && token !== 'null' && token.trim() !== '') {
+  if (token && token !== 'undefined') {
     return true;
   }
-
-  // Si no hay token válido, redirigir al login
   router.navigate(['/login']);
   return false;
 };
