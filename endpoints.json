@@ -1,0 +1,68 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "CRM Full Stack API",
+  "dateExported": "2026-08-11",
+  "version": "1.0",
+  "folders": [],
+  "requests": [
+    {
+      "name": "1. Registro de Usuario",
+      "url": "https://crm-backend-api-16yf.onrender.com/api/auth/register",
+      "method": "POST",
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"nombre\": \"Usuario Prueba\",\n  \"email\": \"prueba@crm.com\",\n  \"password\": \"Password123*\",\n  \"rol\": \"user\"\n}"
+      }
+    },
+    {
+      "name": "2. Login de Usuario",
+      "url": "https://crm-backend-api-16yf.onrender.com/api/auth/login",
+      "method": "POST",
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"admin@crm.com\",\n  \"password\": \"Admin123*\"\n}"
+      }
+    },
+    {
+      "name": "3. Obtener Usuarios",
+      "url": "https://crm-backend-api-16yf.onrender.com/api/users",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer <TU_TOKEN_JWT>"
+        }
+      ]
+    },
+    {
+      "name": "4. Crear Producto",
+      "url": "https://crm-backend-api-16yf.onrender.com/api/productos",
+      "method": "POST",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer <TU_TOKEN_JWT>"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"nombre\": \"Licencia CRM\",\n  \"precio\": 150,\n  \"stock\": 10\n}"
+      }
+    },
+    {
+      "name": "5. Crear Cliente",
+      "url": "https://crm-backend-api-16yf.onrender.com/api/clientes",
+      "method": "POST",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer <TU_TOKEN_JWT>"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"nombre\": \"Cliente Prueba\",\n  \"email\": \"cliente@test.com\",\n  \"telefono\": \"60001122\",\n  \"empresa\": \"Empresa SA\"\n}"
+      }
+    }
+  ]
+}
