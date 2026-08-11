@@ -123,7 +123,7 @@ async function crearAdminInicial() {
   }
 }
 
-// ==================== RUTAS PÚBLICAS ====================
+// ==================== RUTAS PÚBLICAS (NO REQUIEREN TOKEN) ====================
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -174,7 +174,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-// ==================== RUTAS PROTEGIDAS ====================
+// ==================== RUTAS PROTEGIDAS (REQUIEREN TOKEN) ====================
 app.use('/api', verificarToken);
 
 // 1. USUARIOS

@@ -28,12 +28,10 @@ export class AuthService {
   }
 
   registrar(usuario: any): Observable<any> {
-    // Corregido: apunto a /auth/register de index.js
     return this.http.post<any>(`${this.apiUrl}/auth/register`, usuario);
   }
 
   obtenerUsuarios(): Observable<any> {
-    // Corregido: apunto a /users en lugar de /usuarios
     return this.http.get<any>(`${this.apiUrl}/users`, { headers: this.obtenerHeaders() });
   }
 
