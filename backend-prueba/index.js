@@ -191,15 +191,34 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-app.post('/api/users', verificarRol(['admin']), async (req, res) => {
+// Función interna reutilizable para crear usuarios desde /api/users o /api/usuarios
+const crearUsuarioHandler = async (req, res) => {
   try {
-    req.body.password = await bcrypt.hash(req.body.password, 10);
-    const nuevoUsuario = await Usuario.create(req.body);
+    const { nombre, email, password, correo } = req.body;
+    const correoFinal = email || correo;
+
+    if (!password) {
+      return res.status(400).json({ ok: false, mensaje: 'La contraseña es requerida' });
+    }
+
+    const passwordHashed = await bcrypt.hash(password, 10);
+    const nuevoUsuario = await Usuario.create({
+      nombre,
+      email: correoFinal,
+      password: passwordHashed,
+      rol: req.body.rol || 'user',
+      estado: true
+    });
+
     res.status(201).json(nuevoUsuario);
   } catch (error) {
+    console.error('Error al crear usuario:', error);
     res.status(400).json({ ok: false, mensaje: 'Error al crear usuario', error });
   }
-});
+};
+
+app.post('/api/users', verificarRol(['admin']), crearUsuarioHandler);
+app.post('/api/usuarios', verificarRol(['admin']), crearUsuarioHandler);
 
 app.delete('/api/users/:id', verificarRol(['admin']), async (req, res) => {
   try {
@@ -253,7 +272,7 @@ app.get('/api/notificaciones', async (req, res) => res.json(await Notificacion.f
 app.delete('/api/:coleccion/:id', verificarRol(['admin']), async (req, res) => {
   try {
     const { coleccion, id } = req.params;
-    
+
     const modelos = {
       usuarios: Usuario,
       users: Usuario,
