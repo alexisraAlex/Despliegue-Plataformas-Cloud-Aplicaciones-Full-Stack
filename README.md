@@ -1,13 +1,12 @@
-### 🔗 Documentación de Endpoints
-Puedes revisar o importar la colección completa de peticiones de la API REST usando el archivo subido en el proyecto:
-* **Colección de Endpoints (JSON):** [endpoints.json](./endpoints.json)
-
-  
 # CRM Full Stack - Sistema de Gestión de Relaciones con Clientes
 
 Un sistema CRM (Customer Relationship Management) web completo diseñado para gestionar clientes, ventas, productos, actividades, tickets de soporte y notificaciones en una plataforma centralizada. Desarrollado con una arquitectura desacoplada utilizando **Node.js/Express** para la API Backend y **Angular** para la interfaz de usuario.
 
 ---
+### 🔗 Documentación de Endpoints
+Puedes revisar o importar la colección completa de peticiones de la API REST usando el archivo subido en el proyecto:
+* **Colección de Endpoints (JSON):** [endpoints.json](./endpoints.json)
+
 
 ## 🚀 Despliegue en Producción
 
