@@ -117,6 +117,10 @@ async function crearAdminInicial() {
         estado: true
       });
       console.log('Usuario Admin por defecto creado: admin@crm.com / Admin123*');
+    } else if (adminExistente.rol !== 'admin') {
+      adminExistente.rol = 'admin';
+      await adminExistente.save();
+      console.log('Rol de admin@crm.com actualizado correctamente a admin');
     }
   } catch (error) {
     console.error('Error al inicializar Admin:', error);
@@ -244,6 +248,38 @@ app.post('/api/tickets', verificarRol(['user', 'admin']), async (req, res) => re
 
 // 7. NOTIFICACIONES
 app.get('/api/notificaciones', async (req, res) => res.json(await Notificacion.find().sort({ fecha: -1 })));
+
+// ==================== ENDPOINT DINÁMICO DE ELIMINACIÓN PARA EL FRONTEND ====================
+app.delete('/api/:coleccion/:id', verificarRol(['admin']), async (req, res) => {
+  try {
+    const { coleccion, id } = req.params;
+    
+    const modelos = {
+      usuarios: Usuario,
+      users: Usuario,
+      clientes: Cliente,
+      productos: Producto,
+      ventas: Venta,
+      actividades: Actividad,
+      tickets: Ticket,
+      notificaciones: Notificacion
+    };
+
+    const Modelo = modelos[coleccion.toLowerCase()];
+    if (!Modelo) {
+      return res.status(400).json({ ok: false, mensaje: 'Colección no encontrada' });
+    }
+
+    const eliminado = await Modelo.findByIdAndDelete(id);
+    if (!eliminado) {
+      return res.status(404).json({ ok: false, mensaje: 'Registro no encontrado' });
+    }
+
+    return res.json({ ok: true, mensaje: 'Registro eliminado correctamente' });
+  } catch (error) {
+    return res.status(500).json({ ok: false, mensaje: 'Error al eliminar el registro', error });
+  }
+});
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Servidor ejecutándose en puerto ${PORT}`));
