@@ -2,20 +2,20 @@
 
 Un sistema CRM (Customer Relationship Management) web completo diseñado para gestionar clientes, ventas, productos, actividades, tickets de soporte y notificaciones en una plataforma centralizada. Desarrollado con una arquitectura desacoplada utilizando **Node.js/Express** para la API Backend y **Angular** para la interfaz de usuario.
 
----
-### 🔗 Documentación de Endpoints
+
+## Documentación de Endpoints
 Puedes revisar o importar la colección completa de peticiones de la API REST usando el archivo subido en el proyecto:
 * **Colección de Endpoints (JSON):** [endpoints.json](./endpoints.json)
 
 
-## 🚀 Despliegue en Producción
+## Despliegue en Producción
 
 * **Frontend App (Angular):** [https://crm-frontend-aovu.onrender.com](https://crm-frontend-aovu.onrender.com)
 * **Backend API (Node.js/Express):** [https://crm-backend-api-16yf.onrender.com](https://crm-backend-api-16yf.onrender.com)
 
----
 
-## 🛠️ Tecnologías Utilizadas
+
+## Tecnologías Utilizadas
 
 ### Backend
 * **Node.js & Express:** Entorno de ejecución y framework HTTP para la API REST.
@@ -29,9 +29,9 @@ Puedes revisar o importar la colección completa de peticiones de la API REST us
 * **RxJS & HttpClient:** Manejo de peticiones asíncronas e interacción con la API.
 * **TypeScript:** Lenguaje principal para la estructura del cliente frontend.
 
----
 
-## 🔒 Autenticación y Control de Acceso (RBAC)
+
+Autenticación y Control de Acceso (RBAC)
 
 El sistema cuenta con un middleware de autenticación por Token JWT y control de acceso basado en roles (`admin` y `user`):
 
@@ -41,7 +41,7 @@ El sistema cuenta con un middleware de autenticación por Token JWT y control de
 
 ---
 
-## 📌 Documentación de Endpoints (API REST)
+## Documentación de Endpoints (API REST)
 
 ### Autenticación (Pública)
 * `POST /api/auth/register` - Registro de nuevos usuarios.
@@ -62,7 +62,7 @@ El sistema cuenta con un middleware de autenticación por Token JWT y control de
 
 ---
 
-## 💻 Instalación y Ejecución Local
+## Instalación y Ejecución Local
 
 ### Prerequisitos
 * Node.js (v18 o superior)
